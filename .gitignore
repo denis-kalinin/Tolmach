@@ -1,0 +1,11 @@
+logs/*
+!.gitkeep
+node_modules/
+bower_components/
+.tmp/
+coverage/
+.externalToolBuilders/
+.project
+.tern-project
+.settings/
+*.log
