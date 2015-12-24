@@ -1,0 +1,30 @@
+{
+  "name": "itranga.tolmach",
+  "description": "Service to add translation (to angular-translate) from different angular modules",
+  "main": "dist/tolmach.js",
+  "authors": [
+    "Denis Kalinin"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "i18n",
+    "angular-translate"
+  ],
+  "homepage": "https://github.com/denis-kalinin/Tolmach",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-translate": "~2.8.1",
+    "angular-sanitize": "~1.4.8"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.8"
+  }
+}

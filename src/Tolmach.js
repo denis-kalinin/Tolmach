@@ -8,9 +8,9 @@
 ( function () {
 	"use strict";
 	angular
-		.module("itranga.tolmach", ["pascalprecht.translate", "ngSanitize", "ngCookies"])
+		.module("itranga.tolmach", ["pascalprecht.translate", "ngSanitize"])
 		.provider("ModuleTranslationsLoader", ModuleTranslationsLoaderProvider)
-		.provider("Tolmach", TolmachProvider);
+		.provider("tolmach", TolmachProvider);
 
 	TolmachProvider.$inject = ["$translateProvider", "ModuleTranslationsLoaderProvider"];
 
@@ -28,8 +28,8 @@
 			return function getBundleTranslation(options){
 				var langId = options.key.toUpperCase();
 				var deferred = $q.defer();
-				if( !!translations && !!translations[langId] ){
-					deferred.resolve(translations[langId]);
+				if( translations && translations[langId] ){
+					deferred.resolve( translations[langId] );
 				}else{
 					deferred.reject();
 				}
@@ -43,16 +43,21 @@
 			.useLoader("ModuleTranslationsLoader")
 			.useSanitizeValueStrategy("sanitize");
 
-		var rosettaStone = {};
+		var rosettaStone = {FR: {Hello: "Salut Mond!"}};
 
 		this.getTranslateProvider = function(){
 			return $translateProvider;
 		};
 
 		this.setTranslations = function(value){
-			if(!value){
+			if(value){
 				rosettaStone = value;
+				return true;
 			}
+			return false;
+		};
+		this.getTranslations = function(){
+			return rosettaStone;
 		};
 
 		this.$get = ["$translate", Tolmach];
@@ -68,6 +73,7 @@
 				rosettaStone = angular.merge(rosettaStone, newTranslations);
 				mtlProvider.setTranslations(rosettaStone);
 				$translate.refresh();
+				return rosettaStone;
 			}
 		}
 	}
