@@ -8,7 +8,7 @@
 describe("Tolmach.js testing", function () {
 	"use strict";
 
-	var translations = {EN: {Hello: "Hello world!"}, ES: {Hello: "¡Hola, mundo!"}};
+	var translations = {EN: {Hello: "Hello world!"}, "ES": {Hello: "¡Hola, mundo!"}};
 
 /*
 	beforeEach(function loadProvider() {
@@ -28,16 +28,16 @@ describe("Tolmach.js testing", function () {
 	var $tolmachProvider, tolmach, mtl, $translate, $log, $rootScope;
 
 	beforeEach(function loadModules(){
-			angular.mock.module("itranga.tolmach", function(_ModuleTranslationsLoaderProvider_, tolmachProvider, $provide){
-				$provide.value("$log", console);
-				var test1 = chai.expect(_ModuleTranslationsLoaderProvider_).to.exist;
+			angular.mock.module("itranga.tolmach", function(tolmachProvider, $provide){
+				//$provide.value("$log", console);
 				var test2 = chai.expect(tolmachProvider).to.exist;
 				var $translateProvider = tolmachProvider.getTranslateProvider();
 				$translateProvider.useLoader("ModuleTranslationsLoader");
 				//$translateProvider.useSanitizeValueStrategy("sanitize");
 				$translateProvider.useSanitizeValueStrategy("escape"); //escapeParameters, sanitizeParameters
 				//$translateProvider.useLocalStorage();
-				$translateProvider.fallbackLanguage(["en", "ru"]).registerAvailableLanguageKeys(["en", "ru"], {"en_*": "en", "ru_*": "ru"});
+				//$translateProvider.fallbackLanguage(["en", "ru"]).registerAvailableLanguageKeys(["en", "ru", "es"], {"en_*": "en", "ru_*": "ru"});
+				//$translateProvider.preferredLanguage("en");
 				$tolmachProvider = tolmachProvider;
 				var result = tolmachProvider.setTranslations(translations);
 				var test4 = chai.expect(result).to.be.true;
@@ -67,7 +67,7 @@ describe("Tolmach.js testing", function () {
 			$log.debug("ROSETTA: ", rosetta);
 		});
 		it("Check that translation is avalilable with TranslationLoaderProvider", function(done){
-			var promise = mtl({key: "en"});
+			var promise = mtl({key: "ru"});
 			//var test = expect(promise).to.exist;
 			//console.log("PROMISE", promise);//promise.then(function(data){});
 			promise.then(function (data){
@@ -85,18 +85,18 @@ describe("Tolmach.js testing", function () {
 			var test = chai.expect(currentLang).to.be.exist;
 			var test2 = chai.expect(currentLang).to.be.equal("ru");
 		});
-		it("Translate \"Hello world!\" to Russian \"Привет мир!\"", function(done){
+		it("Get Russian \"Привет мир!\"", function(done){
 			var promise = $translate("Hello");
 			promise.then(function(data){
 				data.should.be.equal($tolmachProvider.getTranslations().RU.Hello);
+				//data.should.be.equal("Привет мир!");
 				done();
 			}).catch(function (e){
-				$log.error("Rejected: ", e);
-				throw new Error("Failed to process TRANSLATION promise!");
+				throw new Error("Failed to process TRANSLATION promise! Key: " + e);
 			});
 			$rootScope.$digest();
 		});
-		it("Translate \"Hello world!\" to Spanish \"¡Hola, mundo!\"", function(done){
+		it("Get Spanish \"¡Hola, mundo!\"", function(done){
 			$translate.use("es");
 			var promise = $translate("Hello");
 			promise.then(function(data){

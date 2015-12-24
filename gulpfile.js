@@ -9,7 +9,9 @@
 var gulp = require("gulp"),
 	gutil = require("gulp-util"),
 	path = require("path"),
-	karma = require("karma");
+	karma = require("karma"),
+	rename = require("gulp-rename"),
+	uglify = require("gulp-uglify");
 
 gulp.task("tdd", function(){
 	function karmaServerCb(exitCode){
@@ -24,3 +26,11 @@ gulp.task("tdd", function(){
 	}, karmaServerCb); // for error handling with .on("error", function(){}) - use github.com/lazd/gulp-karma
 	testServer.start();
 });
+gulp.task("copy:js", function(){
+	return gulp.src(["src/tolmach.js"])
+		.pipe(gulp.dest("dist"))
+		.pipe(rename("tolmach.min.js"))
+		.pipe(uglify())
+		.pipe(gulp.dest("dist"));
+});
+gulp.task("default", ["tdd", "copy:js"]);
