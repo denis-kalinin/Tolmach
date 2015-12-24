@@ -1,6 +1,6 @@
 {
-  "name": "itranga.tolmach",
-  "description": "Service to add translation (to angular-translate) from different angular modules",
+  "name": "tolmach",
+  "description": "Service to add translations to angular-translate with plain javascript object",
   "main": "dist/tolmach.js",
   "authors": [
     "Denis Kalinin"
@@ -23,8 +23,7 @@
   ],
   "dependencies": {
     "angular": "~1.4.8",
-    "angular-translate": "~2.8.1",
-    "angular-sanitize": "~1.4.8"
+    "angular-translate": "~2.8.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.8"

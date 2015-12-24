@@ -32,15 +32,15 @@ describe("Tolmach.js testing", function () {
 				//$provide.value("$log", console);
 				var test2 = chai.expect(tolmachProvider).to.exist;
 				var $translateProvider = tolmachProvider.getTranslateProvider();
-				$translateProvider.useLoader("ModuleTranslationsLoader");
+				//$translateProvider.useLoader("ModuleTranslationsLoader");
 				//$translateProvider.useSanitizeValueStrategy("sanitize");
-				$translateProvider.useSanitizeValueStrategy("escape"); //escapeParameters, sanitizeParameters
+				//$translateProvider.useSanitizeValueStrategy("escape"); //escapeParameters, sanitizeParameters
 				//$translateProvider.useLocalStorage();
 				//$translateProvider.fallbackLanguage(["en", "ru"]).registerAvailableLanguageKeys(["en", "ru", "es"], {"en_*": "en", "ru_*": "ru"});
 				//$translateProvider.preferredLanguage("en");
 				$tolmachProvider = tolmachProvider;
 				var result = tolmachProvider.setTranslations(translations);
-				var test4 = chai.expect(result).to.be.true;
+				var test4 = chai.expect(result).to.exist;
 				var test5 = chai.expect(tolmachProvider.getTranslations()).to.exist;
 				var test6 = chai.expect(tolmachProvider.getTranslations()).to.equal(translations);
 			});
@@ -62,7 +62,7 @@ describe("Tolmach.js testing", function () {
 			});
 		});
 		it("Add translation to \"Tolmach\"", function(){
-			var rosetta = tolmach.addTranslations({RU: {Hello: "Привет мир!"}});
+			var rosetta = tolmach.addTranslations({"rU": {Hello: "Привет мир!"}});
 			var result = chai.expect(rosetta).to.exist;
 			$log.debug("ROSETTA: ", rosetta);
 		});
