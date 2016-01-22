@@ -37,14 +37,21 @@
 					if (translations.hasOwnProperty(key)) {
 						key = key.toLowerCase();
 						if(!languages[key]){
-							languages[key] = {};
+							languages[key] = true;
 							updateTranslator = true;
 						}
 					}
 				}
 				if(updateTranslator){
+					var langs = Object.keys(languages);
+					var langTemplates = {};
+					for(var i = 0; i < langs.length; i++){
+						langTemplates[langs[i] + "_*"] = langs[i];
+					}
 					$translateProvider
-						.fallbackLanguage(Object.keys(languages));
+						//.fallbackLanguage(Object.keys(languages))
+						.registerAvailableLanguageKeys(langs, langTemplates);
+					//.registerAvailableLanguageKeys(["en", "ru", "es", "it"], {});// {"en_*": "en", "ru_*": "ru"});
 				}
 			}
 			return translations;
@@ -83,16 +90,39 @@
 
 		function Tolmach($translate){
 			var service = {
-				addTranslations: addTranslations
+				addTranslations: addTranslations,
+				getTranslations: getTranslations,
+				getTranslate: getTranslate
 			};
 			return service;
-
+			/**
+			 * Add translation
+			 * @param {Object} newTranslations - a map of translations: { FR: {Hello: "Salut!"}, EN: {Hello: "Hello!"} }
+			 * @return a translation array or nothing
+			 */
 			function addTranslations(newTranslations){
-				var rosettaStone = mtlProvider.setTranslations(
-						angular.merge(mtlProvider.getTranslations(), newTranslations)
-					);
+				if(!newTranslations){return;}
+				for(var langKey in newTranslations){
+					if(newTranslations.hasOwnProperty(langKey)){
+						if (langKey !== langKey.toUpperCase()) {
+							var newKey = langKey.toUpperCase();
+							Object.defineProperty(newTranslations, newKey,
+									Object.getOwnPropertyDescriptor(newTranslations, langKey));
+							delete newTranslations[langKey];
+						}
+					}
+				}
+				mtlProvider.setTranslations(
+						angular.merge(mtlProvider.getTranslations(), newTranslations) );
 				$translate.refresh();
-				return rosettaStone;
+			}
+
+			function getTranslations(){
+				return mtlProvider.getTranslations();
+			}
+
+			function getTranslate(){
+				return $translate;
 			}
 		}
 	}

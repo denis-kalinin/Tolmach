@@ -8,7 +8,7 @@
 ( function () {
 	"use strict";
 	angular
-		.module("itranga.tolmach", ["pascalprecht.translate", "ngSanitize"])
+		.module("itranga.tolmach", ["pascalprecht.translate"])
 		.provider("ModuleTranslationsLoader", ModuleTranslationsLoaderProvider)
 		.provider("tolmach", TolmachProvider);
 
@@ -23,6 +23,14 @@
 		};
 		this.setTranslations = function(value){
 			if(value){
+				for (var quirkKey in value){
+					if (quirkKey !== quirkKey.toUpperCase()) {
+						var newKey = quirkKey.toUpperCase();
+						Object.defineProperty(value, newKey,
+							Object.getOwnPropertyDescriptor(value, quirkKey));
+						delete value[quirkKey];
+					}
+				}
 				translations = value;
 				var updateTranslator = false;
 				for (var key in translations) {
@@ -37,9 +45,9 @@
 				if(updateTranslator){
 					$translateProvider
 						.fallbackLanguage(Object.keys(languages));
-						//.registerAvailableLanguageKeys(Object.keys(languages), {});
 				}
 			}
+			return translations;
 		};
 		this.$get = ["$q", function ($q){
 			return function getBundleTranslation(options){
@@ -58,37 +66,31 @@
 	function TolmachProvider($translateProvider, mtlProvider){
 		$translateProvider
 			.useLoader("ModuleTranslationsLoader")
-			.useSanitizeValueStrategy("sanitize");
-
-		var rosettaStone = {};
+			.useSanitizeValueStrategy("escape");
 
 		this.getTranslateProvider = function(){
 			return $translateProvider;
 		};
 
 		this.setTranslations = function(value){
-			if(value){
-				rosettaStone = value;
-				return true;
-			}
-			return false;
+			return mtlProvider.setTranslations(value);
 		};
 		this.getTranslations = function(){
-			return rosettaStone;
+			return mtlProvider.getTranslations();
 		};
 
 		this.$get = ["$translate", Tolmach];
 
 		function Tolmach($translate){
-			mtlProvider.setTranslations(rosettaStone);
 			var service = {
 				addTranslations: addTranslations
 			};
 			return service;
 
 			function addTranslations(newTranslations){
-				rosettaStone = angular.merge(rosettaStone, newTranslations);
-				mtlProvider.setTranslations(rosettaStone);
+				var rosettaStone = mtlProvider.setTranslations(
+						angular.merge(mtlProvider.getTranslations(), newTranslations)
+					);
 				$translate.refresh();
 				return rosettaStone;
 			}
