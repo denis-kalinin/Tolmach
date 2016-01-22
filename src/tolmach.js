@@ -49,9 +49,7 @@
 						langTemplates[langs[i] + "_*"] = langs[i];
 					}
 					$translateProvider
-						//.fallbackLanguage(Object.keys(languages))
 						.registerAvailableLanguageKeys(langs, langTemplates);
-					//.registerAvailableLanguageKeys(["en", "ru", "es", "it"], {});// {"en_*": "en", "ru_*": "ru"});
 				}
 			}
 			return translations;
